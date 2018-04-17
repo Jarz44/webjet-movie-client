@@ -1,0 +1,10 @@
+<form>
+  <mat-form-field>
+    <input matInput placeholder="Please enter a movie title"  [matAutocomplete]="auto" [formControl]="movieCtrl">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option (onSelectionChange)="onEnter($event)" *ngFor="let movie of filteredMovies | async" [value]="movie.title">       
+        <span>{{ movie.title }}</span>     
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

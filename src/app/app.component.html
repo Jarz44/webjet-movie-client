@@ -3,7 +3,15 @@
   <h1>
     Welcome to a shit {{ title }}!
   </h1>
-  <input ng-model="searchText" placeholder="enter movie title here">
+  <!--mat-autocomplete>
+    <mat-option *ngFor="let movie of movies | async" [value]="option">
+      {{ option.title }}
+    </mat-option>
+  </mat-autocomplete--> 
+  <div>
+    <h1>form</h1>
+    <app-movie-search></app-movie-search>
+  </div>
   <table>
     <th>
       Title
@@ -18,10 +26,10 @@
       Filmword
     </th>
     <tr *ngFor="let movie of movies">
-      <td>{{ movie.Title }}</td>
-      <!--td>{{ movie.Price.Minimum | currency}}</td>
-      <td>{{ movie.Price.Cinemaworld | currency}}</td>
-      <td>{{ movie.Price.Filmworld | currency}}</td-->
+      <td>{{ movie.title }}</td>
+      <td>{{ movie.providers[0].ID }}</td>
+      <td></td>
+      <td>tes</td>
     </tr>
   </table>  
 </div>

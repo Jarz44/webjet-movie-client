@@ -1,8 +1,7 @@
 
 export class movie {  
-  Title: string;
-  ID: string;
-  /*price: {
+  title: string;  
+  /*providers: {
     minimum: number
     cinemaworld: number
     filmworld: number 

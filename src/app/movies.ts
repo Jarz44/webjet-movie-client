@@ -1,22 +1,26 @@
 import {movie} from './movie.model'
 
-export const Movies: movie[]= [
+/*export const Movies: movie[]= [
     {
-        Title: "Jason",
-        ID: "X"/*
+        title: "Jason",
+        providers: {}
+        ID: "X"
         price: {
             minimum: 12.00,
             cinemaworld: 14.00,
             filmworld: 12 
-        }*/
+        }
     },
     {
-        Title: "Kevin",
-        ID: "X"/*
+        title: "Kevin",
+        providers: {
+
+        }
+         ID: "X"
         price: {
             minimum: null,
             cinemaworld: 14.00,
             filmworld: 12 
-        }*/
+        }
     }    
-];
+];*/

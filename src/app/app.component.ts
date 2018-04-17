@@ -21,7 +21,7 @@ export class AppComponent {
     this.http.get<movie[]>('http://localhost:3000/movies').subscribe(
       data => {
         console.log(data);
-        this.movies = data;//["Movies"];
+        this.movies = data;
       },
       (err: HttpErrorResponse) => {
         if (err.error instanceof Error) {
