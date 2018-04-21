@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {_} from 'lodash';
 
 import {Observable} from 'rxjs/Observable';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 
-import {movie} from '../movie.model';
+import {movie as Movie} from '../movie.model';
 
 @Component({
   selector: 'app-movie-search',
@@ -16,17 +18,20 @@ export class MovieSearchComponent  {
     movieCtrl: FormControl;
     filteredMovies: Observable<any[]>; 
   
-    movies: movie[] = [{
-      title: 'test'        
+    movies: Movie[] = [{
+      title: 'test',
+      id: "cw001"        
     },
     {
-      title: 'seven'        
+      title: 'seven',
+      id: "cw001"       
     },{
-      title: 'butt'        
+      title: 'butt',
+      id: "cw001" 
     }
     ];
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.movieCtrl = new FormControl();
     this.filteredMovies = this.movieCtrl.valueChanges
       .pipe(
@@ -35,17 +40,39 @@ export class MovieSearchComponent  {
       );
   }
 
-  onEnter(evt: any, opt: any){
+  onEnter(evt: any){
     if (evt.source.selected) {
-      alert(evt.source.value);
+      this.getCost();
     }
   }
 
+  displayFn(movie?: Movie): string | undefined {
+    return movie ? movie.title : undefined;
+  }
+
   filterMovies(title: string) {
-    console.log("title: " + title);
-    console.log(this.filteredMovies);
-    return this.movies.filter(movie =>
-      movie.title.toLowerCase().indexOf(title.toLowerCase()) === 0);
-  }  
+    return this.movies.filter(movie => 
+       movie.title.toLowerCase().includes(title.toLowerCase()));
+  }
+  
+  getCost() {
+    let idsStrings = this.movies.map(movie => movie.id).join(',');    
+
+    const url = 'http://localhost:3000/cost?ids=' + idsStrings;
+
+    this.http.get<any[]>(url).subscribe(
+      data => {
+        console.log(data);
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          console.log("Client-side error.");
+        } else {
+          console.log("Server-side error occured.");
+        }
+      }
+    );
+  
+  }
 
 }
