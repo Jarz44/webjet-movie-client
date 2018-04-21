@@ -1,30 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
+<div style="text-align:center" class="container">
   <h1>
-    Welcome to a shit {{ title }}!
+    Welcome to some movie {{ title }}!
   </h1>
-  <div>
-    <h1>form</h1>
-    <app-movie-search></app-movie-search>
-  </div>
-  <table>
-    <th>
-      Title
-    </th>
-    <th>
-      Cheapest
-    </th>
-    <th>
-      Cinemaworld
-    </th>
-    <th>
-      Filmword
-    </th>
-    <tr *ngFor="let movie of movies">
-      <td>{{ movie.title }}</td>
-      <td>{{ movie.providers[0].ID }}</td>
-      <td></td>
-      <td>tes</td>
-    </tr>
-  </table>  
+  <app-movie-search></app-movie-search>
+  
+  
 </div>

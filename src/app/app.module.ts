@@ -1,4 +1,3 @@
-
 import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
@@ -9,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { AppComponent } from './app.component';
 import { MovieSearchComponent } from './movie-search/movie-search.component';
-
+import { MoviesService } from "./movies.service";
 
 
 @NgModule({
@@ -28,7 +27,7 @@ import { MovieSearchComponent } from './movie-search/movie-search.component';
     FormsModule,   
     ReactiveFormsModule,MatInputModule
   ], 
-  providers:[],
+  providers:[MoviesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

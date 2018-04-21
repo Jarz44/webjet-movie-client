@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {_} from 'lodash';
+
 
 import {Observable} from 'rxjs/Observable';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 
 import {movie as Movie} from '../movie.model';
+import {MoviesService} from '../movies.service';
 
 @Component({
   selector: 'app-movie-search',
@@ -18,31 +19,37 @@ export class MovieSearchComponent  {
     movieCtrl: FormControl;
     filteredMovies: Observable<any[]>; 
   
-    movies: Movie[] = [{
-      title: 'test',
-      id: "cw001"        
-    },
-    {
-      title: 'seven',
-      id: "cw001"       
-    },{
-      title: 'butt',
-      id: "cw001" 
-    }
-    ];
+    movies: Movie[] = [];
 
-  constructor(private http: HttpClient) {
+    cost: string = "";
+
+  constructor(private http: HttpClient, private moviesService: MoviesService) {
     this.movieCtrl = new FormControl();
     this.filteredMovies = this.movieCtrl.valueChanges
       .pipe(
         startWith(''),
-        map(movie => movie ? this.filterMovies(movie) : this.movies.slice())
+        map(
+          movie => 
+          movie && typeof(movie) === 'object' ? movie.title : movie
+        ),
+        map(title => title ? this.filterMovies(title) : this.movies.slice())
       );
   }
 
+  ngOnInit() {
+    this.getMovies();
+  
+  }
+
+  getMovies(): void {
+    this.moviesService.getMovies()
+    .subscribe(movies => this.movies = movies);
+  }
+
+
   onEnter(evt: any){
     if (evt.source.selected) {
-      this.getCost();
+      this.getCost(evt.source.value);
     }
   }
 
@@ -51,28 +58,13 @@ export class MovieSearchComponent  {
   }
 
   filterMovies(title: string) {
-    return this.movies.filter(movie => 
-       movie.title.toLowerCase().includes(title.toLowerCase()));
+    return this.movies.filter(movie =>     
+         movie.title.toLowerCase().includes(title.toLowerCase()));      
   }
   
-  getCost() {
-    let idsStrings = this.movies.map(movie => movie.id).join(',');    
-
-    const url = 'http://localhost:3000/cost?ids=' + idsStrings;
-
-    this.http.get<any[]>(url).subscribe(
-      data => {
-        console.log(data);
-      },
-      (err: HttpErrorResponse) => {
-        if (err.error instanceof Error) {
-          console.log("Client-side error.");
-        } else {
-          console.log("Server-side error occured.");
-        }
-      }
-    );
-  
+  getCost(movie) {
+    let idsStrings = movie.providers.map(provider => provider.ID);
+    this.moviesService.getMinimumMovieCost(idsStrings).subscribe(data => this.cost = data);
   }
 
 }
