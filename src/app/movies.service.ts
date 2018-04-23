@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
-import {movie as Movie} from './movie.model';
 import {_} from 'lodash';
+
+import {searchMovie, detailedMovie} from './movie.model';
 
 @Injectable()
 export class MoviesService {
@@ -12,14 +12,14 @@ export class MoviesService {
 
   constructor(private http: HttpClient) { }
 
-  getMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>(this.moviesUrl);
+  getMovies(): Observable<searchMovie[]> {
+    return this.http.get<searchMovie[]>(this.moviesUrl);
   }
 
-  getMinimumMovieCost(ids) {
+  getMinimumMovieCost(ids)/*: Observable<detailedMovie>*/{
     let idsStrings = ids.join(',');  
     let costUrl = this.costUrlNoIds + idsStrings;
-    return this.http.get<string>(costUrl);
+    return this.http.get<any>(costUrl);
   }
 
 }

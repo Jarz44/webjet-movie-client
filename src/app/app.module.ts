@@ -9,12 +9,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AppComponent } from './app.component';
 import { MovieSearchComponent } from './movie-search/movie-search.component';
 import { MoviesService } from "./movies.service";
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MovieSearchComponent
+    MovieSearchComponent,
+    NavBarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

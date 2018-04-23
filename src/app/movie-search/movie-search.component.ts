@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 
-import {movie as Movie} from '../movie.model';
+import {searchMovie, detailedMovie} from '../movie.model';
 import {MoviesService} from '../movies.service';
 
 @Component({
@@ -18,11 +18,12 @@ import {MoviesService} from '../movies.service';
 export class MovieSearchComponent  {
     movieCtrl: FormControl;
     filteredMovies: Observable<any[]>; 
-  
-    movies: Movie[] = [];
+    isSearching: boolean = false;
+    resultFound: boolean = false;
+    movies: searchMovie[] = [];
+    cheapestMovie: detailedMovie;
 
-    cost: string = "";
-
+    
   constructor(private http: HttpClient, private moviesService: MoviesService) {
     this.movieCtrl = new FormControl();
     this.filteredMovies = this.movieCtrl.valueChanges
@@ -30,7 +31,7 @@ export class MovieSearchComponent  {
         startWith(''),
         map(
           movie => 
-          movie && typeof(movie) === 'object' ? movie.title : movie
+          movie && typeof(movie) === 'object' ? movie["title"] : movie
         ),
         map(title => title ? this.filterMovies(title) : this.movies.slice())
       );
@@ -39,7 +40,7 @@ export class MovieSearchComponent  {
   ngOnInit() {
     this.getMovies();
   
-  }
+  } 
 
   getMovies(): void {
     this.moviesService.getMovies()
@@ -49,11 +50,14 @@ export class MovieSearchComponent  {
 
   onEnter(evt: any){
     if (evt.source.selected) {
+      this.cheapestMovie = undefined;
+      this.isSearching = true;
+      this.resultFound = false;
       this.getCost(evt.source.value);
     }
   }
 
-  displayFn(movie?: Movie): string | undefined {
+  displayFn(movie?: searchMovie): string | undefined {
     return movie ? movie.title : undefined;
   }
 
@@ -64,7 +68,11 @@ export class MovieSearchComponent  {
   
   getCost(movie) {
     let idsStrings = movie.providers.map(provider => provider.ID);
-    this.moviesService.getMinimumMovieCost(idsStrings).subscribe(data => this.cost = data);
+    this.moviesService.getMinimumMovieCost(idsStrings).subscribe(data => {
+       this.cheapestMovie = data;
+       this.isSearching = false;
+       this.resultFound = true;
+    });
   }
 
 }

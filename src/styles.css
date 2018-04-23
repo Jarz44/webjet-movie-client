@@ -1,6 +1,5 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-.mat-autocomplete-panel {
-    max-width: none !important;
-    width: auto !important
-  }
+.mat-form-field-infix {
+  width: 400px !important;
+} 
