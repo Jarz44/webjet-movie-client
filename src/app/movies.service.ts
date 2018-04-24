@@ -3,12 +3,14 @@ import { HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import {_} from 'lodash';
 
+
+import { environment } from '../environments/environment';
 import {searchMovie, detailedMovie} from './movie.model';
 
 @Injectable()
 export class MoviesService {
-  private moviesUrl = 'http://localhost:3000/movies';
-  private costUrlNoIds = 'http://localhost:3000/cost?ids=';
+  private moviesUrl = environment.moviesUrl;
+  private costUrlNoIds = environment.costUrlNoIds;
 
   constructor(private http: HttpClient) { }
 
@@ -16,7 +18,7 @@ export class MoviesService {
     return this.http.get<searchMovie[]>(this.moviesUrl);
   }
 
-  getMinimumMovieCost(ids)/*: Observable<detailedMovie>*/{
+  getMinimumMovieCost(ids): Observable<detailedMovie>{
     let idsStrings = ids.join(',');  
     let costUrl = this.costUrlNoIds + idsStrings;
     return this.http.get<any>(costUrl);

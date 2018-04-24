@@ -15,13 +15,17 @@ import {MoviesService} from '../movies.service';
   templateUrl: './movie-search.component.html',
   styleUrls: ['./movie-search.component.css']
 })
-export class MovieSearchComponent  {
+export class MovieSearchComponent  {    
     movieCtrl: FormControl;
     filteredMovies: Observable<any[]>; 
     isSearching: boolean = false;
     resultFound: boolean = false;
+    serviceFailed: boolean = false;
+    noMovies = false;
     movies: searchMovie[] = [];
     cheapestMovie: detailedMovie;
+    titleKey: string = "title";
+    maxSearchResults: number = 10;
 
     
   constructor(private http: HttpClient, private moviesService: MoviesService) {
@@ -31,9 +35,9 @@ export class MovieSearchComponent  {
         startWith(''),
         map(
           movie => 
-          movie && typeof(movie) === 'object' ? movie["title"] : movie
+          movie && typeof(movie) === 'object' ? movie[this.titleKey] : movie
         ),
-        map(title => title ? this.filterMovies(title) : this.movies.slice())
+        map(title => title ? this.filterMovies(title) : this.movies.slice(0, this.maxSearchResults))
       );
   }
 
@@ -44,7 +48,10 @@ export class MovieSearchComponent  {
 
   getMovies(): void {
     this.moviesService.getMovies()
-    .subscribe(movies => this.movies = movies);
+    .subscribe(
+      movies => this.movies = movies, 
+      error => this.noMovies = true
+    );
   }
 
 
@@ -53,6 +60,7 @@ export class MovieSearchComponent  {
       this.cheapestMovie = undefined;
       this.isSearching = true;
       this.resultFound = false;
+      this.serviceFailed = false;
       this.getCost(evt.source.value);
     }
   }
@@ -63,16 +71,20 @@ export class MovieSearchComponent  {
 
   filterMovies(title: string) {
     return this.movies.filter(movie =>     
-         movie.title.toLowerCase().includes(title.toLowerCase()));      
+         movie.title.toLowerCase().includes(title.toLowerCase())).slice(0,this.maxSearchResults);      
   }
   
   getCost(movie) {
     let idsStrings = movie.providers.map(provider => provider.ID);
-    this.moviesService.getMinimumMovieCost(idsStrings).subscribe(data => {
-       this.cheapestMovie = data;
-       this.isSearching = false;
-       this.resultFound = true;
-    });
+    this.moviesService.getMinimumMovieCost(idsStrings).subscribe(
+      data=> {
+        this.cheapestMovie = data;
+        this.isSearching = false;
+        this.resultFound = true;},
+      error => {
+        this.serviceFailed = true;
+        this.isSearching = false;
+      });
   }
 
 }

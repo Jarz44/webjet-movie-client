@@ -1,5 +1,6 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+/*set the width of autocomplete, without this it'll just 180px*/
 .mat-form-field-infix {
   width: 400px !important;
 } 

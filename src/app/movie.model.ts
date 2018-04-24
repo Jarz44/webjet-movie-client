@@ -6,6 +6,8 @@ export class searchMovie {
   }]  
 }
 
+export class movie {}
+
 export class detailedMovie {
   Title: string;
   Price: number;

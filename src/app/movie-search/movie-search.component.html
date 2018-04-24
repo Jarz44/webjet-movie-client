@@ -1,12 +1,16 @@
-<form>
-  <mat-form-field>
-    <input matInput placeholder="Please enter a movie title"  [matAutocomplete]="auto" [formControl]="movieCtrl">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" >
-      <mat-option (onSelectionChange)="onEnter($event)" *ngFor="let movie of filteredMovies | async" [value]="movie">       
-        <span>{{ movie.title }}</span>     
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-</form>
-<div *ngIf="resultFound">{{cheapestMovie?.Provider}} has the cheapest copy for: {{cheapestMovie?.Price|currency}}</div>
-<div *ngIf="isSearching">Calculating...</div>
+<div *ngIf="noMovies">We're currently unable to find any movies, please try again</div>
+<div *ngIf="!noMovies">
+  <form>
+    <mat-form-field>
+      <input matInput placeholder="Please enter a movie title"  [matAutocomplete]="auto" [formControl]="movieCtrl">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" >
+        <mat-option (onSelectionChange)="onEnter($event)" *ngFor="let movie of filteredMovies | async" [value]="movie">       
+          <span>{{ movie.title }}</span>     
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <div *ngIf="resultFound">{{cheapestMovie?.Provider}} has the cheapest copy for: {{cheapestMovie?.Price|currency}}</div>
+  <div *ngIf="isSearching">Calculating...</div>
+  <div *ngIf="serviceFailed">Unable to find the cheapest price please try again later</div>
+</div>
