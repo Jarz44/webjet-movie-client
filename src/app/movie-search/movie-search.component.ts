@@ -16,18 +16,22 @@ import {MoviesService} from '../movies.service';
   styleUrls: ['./movie-search.component.css']
 })
 export class MovieSearchComponent  {    
-    movieCtrl: FormControl;
-    filteredMovies: Observable<any[]>; 
-    isSearching: boolean = false;
-    resultFound: boolean = false;
-    serviceFailed: boolean = false;
-    noMovies = false;
-    movies: searchMovie[] = [];
-    cheapestMovie: detailedMovie;
-    titleKey: string = "title";
-    maxSearchResults: number = 10;
+  movieCtrl: FormControl;
 
-    
+  filteredMovies: Observable<any[]>; 
+  movies: searchMovie[] = [];
+  cheapestMovie: detailedMovie;
+
+  loadingMovies: boolean = true;
+  moviesServiceFailed: boolean = false;
+  
+  resultFound: boolean = false;
+  serviceFailed: boolean = false;    
+  isDetailedMovieSearching: boolean = false;
+
+  titleKey: string = "title";    
+  maxSearchResults: number = 10;
+
   constructor(private http: HttpClient, private moviesService: MoviesService) {
     this.movieCtrl = new FormControl();
     this.filteredMovies = this.movieCtrl.valueChanges
@@ -49,16 +53,21 @@ export class MovieSearchComponent  {
   getMovies(): void {
     this.moviesService.getMovies()
     .subscribe(
-      movies => this.movies = movies, 
-      error => this.noMovies = true
+      movies => {
+        this.movies = movies;
+        this.loadingMovies = false;
+      }, 
+      error => {
+        this.moviesServiceFailed = true;
+        this.loadingMovies = false;
+      }
     );
   }
-
 
   onEnter(evt: any){
     if (evt.source.selected) {
       this.cheapestMovie = undefined;
-      this.isSearching = true;
+      this.isDetailedMovieSearching = true;
       this.resultFound = false;
       this.serviceFailed = false;
       this.getCost(evt.source.value);
@@ -79,11 +88,12 @@ export class MovieSearchComponent  {
     this.moviesService.getMinimumMovieCost(idsStrings).subscribe(
       data=> {
         this.cheapestMovie = data;
-        this.isSearching = false;
-        this.resultFound = true;},
+        this.isDetailedMovieSearching = false;
+        this.resultFound = true;
+      },
       error => {
         this.serviceFailed = true;
-        this.isSearching = false;
+        this.isDetailedMovieSearching = false;
       });
   }
 

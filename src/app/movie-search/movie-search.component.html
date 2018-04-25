@@ -1,5 +1,6 @@
-<div *ngIf="noMovies">We're currently unable to find any movies, please try again</div>
-<div *ngIf="!noMovies">
+<div *ngIf="loadingMovies">Contacting providers for movies...</div>
+<div *ngIf="moviesServiceFailed">We're currently unable to contact our providers :(</div>
+<div *ngIf="!loadingMovies && !moviesServiceFailed">
   <form>
     <mat-form-field>
       <input matInput placeholder="Please enter a movie title"  [matAutocomplete]="auto" [formControl]="movieCtrl">
@@ -11,6 +12,6 @@
     </mat-form-field>
   </form>
   <div *ngIf="resultFound">{{cheapestMovie?.Provider}} has the cheapest copy for: {{cheapestMovie?.Price|currency}}</div>
-  <div *ngIf="isSearching">Calculating...</div>
+  <div *ngIf="isDetailedMovieSearching">Calculating...</div>
   <div *ngIf="serviceFailed">Unable to find the cheapest price please try again later</div>
 </div>
